@@ -72,9 +72,9 @@ const LearningObjectivesInterface = () => {
         obj["Standard"]?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         obj["Plain Language"]?.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesGrade = gradeFilter === "" || obj["Grade Level"] === gradeFilter;
-      const matchesSubject = subjectFilter === "" || obj["Subject"] === subjectFilter;
-      const matchesPriority = priorityFilter === "" || obj["Priority Level"] === priorityFilter;
+      const matchesGrade = gradeFilter === "all" || gradeFilter === "" || obj["Grade Level"] === gradeFilter;
+      const matchesSubject = subjectFilter === "all" || subjectFilter === "" || obj["Subject"] === subjectFilter;
+      const matchesPriority = priorityFilter === "all" || priorityFilter === "" || obj["Priority Level"] === priorityFilter;
 
       return matchesSearch && matchesGrade && matchesSubject && matchesPriority;
     });
@@ -166,7 +166,7 @@ const LearningObjectivesInterface = () => {
                   <SelectValue placeholder="All Grades" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Grades</SelectItem>
+                  <SelectItem value="all">All Grades</SelectItem>
                   {uniqueGrades.map(grade => (
                     <SelectItem key={grade} value={grade}>{grade}</SelectItem>
                   ))}
@@ -178,7 +178,7 @@ const LearningObjectivesInterface = () => {
                   <SelectValue placeholder="All Subjects" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Subjects</SelectItem>
+                  <SelectItem value="all">All Subjects</SelectItem>
                   {uniqueSubjects.map(subject => (
                     <SelectItem key={subject} value={subject}>{subject}</SelectItem>
                   ))}
@@ -190,7 +190,7 @@ const LearningObjectivesInterface = () => {
                   <SelectValue placeholder="All Priorities" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Priorities</SelectItem>
+                  <SelectItem value="all">All Priorities</SelectItem>
                   {uniquePriorities.map(priority => (
                     <SelectItem key={priority} value={priority}>{priority}</SelectItem>
                   ))}
