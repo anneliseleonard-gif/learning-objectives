@@ -27,9 +27,9 @@ const LearningObjectivesInterface = () => {
   const [objectives, setObjectives] = useState<LearningObjective[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [gradeFilter, setGradeFilter] = useState("");
-  const [subjectFilter, setSubjectFilter] = useState("");
-  const [priorityFilter, setPriorityFilter] = useState("");
+  const [gradeFilter, setGradeFilter] = useState("all");
+  const [subjectFilter, setSubjectFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
   const [sortBy, setSortBy] = useState<"grade" | "subject" | "priority">("grade");
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
