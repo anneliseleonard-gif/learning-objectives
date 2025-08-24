@@ -56,7 +56,26 @@ export default {
 				priority: {
 					high: 'hsl(var(--priority-high))',
 					medium: 'hsl(var(--priority-medium))',
+					moderate: 'hsl(var(--priority-moderate))',
 					low: 'hsl(var(--priority-low))'
+				},
+				grade: {
+					'6': 'hsl(var(--grade-6))',
+					'7': 'hsl(var(--grade-7))',
+					'8': 'hsl(var(--grade-8))',
+					'6-7-8': 'hsl(var(--grade-6-7-8))',
+					'6-8': 'hsl(var(--grade-6-8))',
+					'7-8': 'hsl(var(--grade-7-8))',
+					'8-6-7': 'hsl(var(--grade-8-6-7))',
+					'mixed': 'hsl(var(--grade-mixed))'
+				},
+				subject: {
+					ela: 'hsl(var(--subject-ela))',
+					math: 'hsl(var(--subject-math))',
+					science: 'hsl(var(--subject-science))',
+					'social-studies': 'hsl(var(--subject-social-studies))',
+					algebra: 'hsl(var(--subject-algebra))',
+					default: 'hsl(var(--subject-default))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

@@ -105,17 +105,35 @@ const LearningObjectivesInterface = () => {
     setExpandedRows(newExpanded);
   };
 
-  const getPriorityBadgeVariant = (priority: string) => {
-    switch (priority?.toLowerCase()) {
-      case "high":
-        return "destructive";
-      case "medium":
-        return "default";
-      case "low":
-        return "secondary";
-      default:
-        return "outline";
-    }
+  const getPriorityBadgeColor = (priority: string) => {
+    const priorityLower = priority?.toLowerCase() || "";
+    if (priorityLower.includes("high")) return "bg-priority-high text-white";
+    if (priorityLower.includes("moderate")) return "bg-priority-moderate text-white";
+    if (priorityLower.includes("medium")) return "bg-priority-medium text-white";
+    if (priorityLower.includes("low")) return "bg-priority-low text-white";
+    return "bg-muted text-muted-foreground";
+  };
+
+  const getGradeBadgeColor = (grade: string) => {
+    const gradeNormalized = grade?.replace(/\s+/g, "") || "";
+    if (gradeNormalized === "6th") return "bg-grade-6 text-white";
+    if (gradeNormalized === "7th") return "bg-grade-7 text-white";
+    if (gradeNormalized === "8th") return "bg-grade-8 text-white";
+    if (gradeNormalized.includes("6th,7th,8th")) return "bg-grade-6-7-8 text-white";
+    if (gradeNormalized.includes("6th,8th")) return "bg-grade-6-8 text-white";
+    if (gradeNormalized.includes("7th,8th")) return "bg-grade-7-8 text-white";
+    if (gradeNormalized.includes("8th,6th,7th")) return "bg-grade-8-6-7 text-white";
+    return "bg-grade-mixed text-white";
+  };
+
+  const getSubjectBadgeColor = (subject: string) => {
+    const subjectLower = subject?.toLowerCase() || "";
+    if (subjectLower === "ela") return "bg-subject-ela text-white";
+    if (subjectLower === "math") return "bg-subject-math text-white";
+    if (subjectLower === "science") return "bg-subject-science text-white";
+    if (subjectLower === "social studies") return "bg-subject-social-studies text-white";
+    if (subjectLower === "algebra i") return "bg-subject-algebra text-white";
+    return "bg-subject-default text-white";
   };
 
   if (loading) {
@@ -237,13 +255,13 @@ const LearningObjectivesInterface = () => {
                             ) : (
                               <ChevronRight className="h-4 w-4 text-muted-foreground" />
                             )}
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className={`text-xs ${getGradeBadgeColor(objective["Grade Level"])}`}>
                               {objective["Grade Level"]}
                             </Badge>
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge className={`text-xs ${getSubjectBadgeColor(objective["Subject"])}`}>
                               {objective["Subject"]}
                             </Badge>
-                            <Badge variant={getPriorityBadgeVariant(objective["Priority Level"])}>
+                            <Badge className={getPriorityBadgeColor(objective["Priority Level"])}>
                               {objective["Priority Level"]}
                             </Badge>
                           </div>
