@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronRight, Search, Filter } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Search, Filter, MoreHorizontal } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface LearningObjective {
   id: number;
@@ -31,8 +31,6 @@ const LearningObjectivesInterface = () => {
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [sortBy, setSortBy] = useState<"subject" | "priority">("subject");
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
-
   useEffect(() => {
     const fetchObjectives = async () => {
       const { data, error } = await supabase
@@ -92,16 +90,6 @@ const LearningObjectivesInterface = () => {
 
     return filtered;
   }, [objectives, searchTerm, gradeFilter, subjectFilter, priorityFilter, sortBy]);
-
-  const toggleExpanded = (id: number) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
-    } else {
-      newExpanded.add(id);
-    }
-    setExpandedRows(newExpanded);
-  };
 
   const getPriorityBadgeColor = (priority: string) => {
     const priorityLower = priority?.toLowerCase() || "";
@@ -235,47 +223,38 @@ const LearningObjectivesInterface = () => {
         <div className="space-y-4">
           {filteredAndSortedObjectives.map((objective) => (
             <Card key={objective.id} className="border border-border hover:border-primary/50 transition-colors">
-              <Collapsible>
-                <CollapsibleTrigger asChild>
-                  <CardHeader 
-                    className="cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => toggleExpanded(objective.id)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="flex items-center gap-2">
-                            {expandedRows.has(objective.id) ? (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                            )}
-                            <Badge className={`text-xs ${getGradeBadgeColor(objective["Grade Level"])}`}>
-                              {objective["Grade Level"]}
-                            </Badge>
-                            <Badge className={`text-xs ${getSubjectBadgeColor(objective["Subject"])}`}>
-                              {objective["Subject"]}
-                            </Badge>
-                            <Badge className={getPriorityBadgeColor(objective["Priority Level"])}>
-                              {objective["Priority Level"]}
-                            </Badge>
-                          </div>
-                        </div>
-                        <CardTitle className="text-lg font-medium text-left">
-                          {objective["Standard"]}
-                        </CardTitle>
-                        <p className="text-sm text-muted-foreground mt-1 text-left">
-                          {objective["Objective"]}
-                        </p>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Badge className={`text-xs ${getGradeBadgeColor(objective["Grade Level"])}`}>
+                          {objective["Grade Level"]}
+                        </Badge>
+                        <Badge className={`text-xs ${getSubjectBadgeColor(objective["Subject"])}`}>
+                          {objective["Subject"]}
+                        </Badge>
+                        <Badge className={getPriorityBadgeColor(objective["Priority Level"])}>
+                          {objective["Priority Level"]}
+                        </Badge>
                       </div>
                     </div>
-                  </CardHeader>
-                </CollapsibleTrigger>
-
-                <CollapsibleContent>
-                  <CardContent className="pt-0">
-                    <div className="border-t border-border pt-6">
-                      <div className="grid gap-6">
+                    <CardTitle className="text-lg font-medium text-left">
+                      {objective["Standard"]}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1 text-left">
+                      {objective["Objective"]}
+                    </p>
+                  </div>
+                  
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" size="sm" className="ml-4">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-96 max-h-96 overflow-y-auto">
+                      <div className="grid gap-4">
                         {/* Plain Language */}
                         {objective["Plain Language"] && (
                           <div>
@@ -289,7 +268,7 @@ const LearningObjectivesInterface = () => {
                         {/* Performance Levels */}
                         <div>
                           <h4 className="font-medium text-sm text-foreground mb-3">Performance Levels</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <div className="grid gap-3">
                             {objective["Below Basic"] && (
                               <div className="bg-muted/50 p-3 rounded-lg">
                                 <h5 className="font-medium text-xs text-foreground mb-1">Below Basic</h5>
@@ -335,10 +314,10 @@ const LearningObjectivesInterface = () => {
                           </div>
                         )}
                       </div>
-                    </div>
-                  </CardContent>
-                </CollapsibleContent>
-              </Collapsible>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </CardHeader>
             </Card>
           ))}
         </div>
