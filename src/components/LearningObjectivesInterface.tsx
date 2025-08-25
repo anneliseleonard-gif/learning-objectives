@@ -31,6 +31,7 @@ const LearningObjectivesInterface = () => {
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [sortBy, setSortBy] = useState<"subject" | "priority">("subject");
+
   useEffect(() => {
     const fetchObjectives = async () => {
       const { data, error } = await supabase
