@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Educational theme - warm blues and clean whites */
-    --background: 0 0% 100%;
+    --background: var(--color-slate-200);
     --foreground: 215 25% 27%;
 
     --card: 0 0% 100%;
