@@ -157,29 +157,23 @@ const LearningObjectivesInterface = () => {
           </p>
         </div>
 
-        {/* Filters and Search */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              Filters & Search
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Search objectives..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              
+        {/* Filters & Search */}
+        <div className="bg-muted/50 rounded-lg p-4 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder="Search objectives..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-3">
               <Select value={gradeFilter} onValueChange={setGradeFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Grades" />
+                <SelectTrigger className="w-full sm:w-32">
+                  <SelectValue placeholder="Grade" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Grades</SelectItem>
@@ -190,8 +184,8 @@ const LearningObjectivesInterface = () => {
               </Select>
 
               <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Subjects" />
+                <SelectTrigger className="w-full sm:w-36">
+                  <SelectValue placeholder="Subject" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Subjects</SelectItem>
@@ -206,11 +200,11 @@ const LearningObjectivesInterface = () => {
                 onValueChange={setPriorityFilter}
                 disabled={gradeFilter === "all" || subjectFilter === "all"}
               >
-                <SelectTrigger className={gradeFilter === "all" || subjectFilter === "all" ? "opacity-50" : ""}>
-                  <SelectValue placeholder={gradeFilter === "all" || subjectFilter === "all" ? "Select grade & subject first" : "All Priorities"} />
+                <SelectTrigger className={`w-full sm:w-32 ${gradeFilter === "all" || subjectFilter === "all" ? "opacity-50" : ""}`}>
+                  <SelectValue placeholder="Priority" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Priorities</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   {uniquePriorities.map(priority => (
                     <SelectItem key={priority} value={priority}>{priority}</SelectItem>
                   ))}
@@ -218,17 +212,17 @@ const LearningObjectivesInterface = () => {
               </Select>
 
               <Select value={sortBy} onValueChange={(value: "subject" | "priority") => setSortBy(value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort by" />
+                <SelectTrigger className="w-full sm:w-28">
+                  <SelectValue placeholder="Sort" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="subject">Sort by Subject</SelectItem>
-                  <SelectItem value="priority">Sort by Priority</SelectItem>
+                  <SelectItem value="subject">Subject</SelectItem>
+                  <SelectItem value="priority">Priority</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Results Count */}
         <div className="mb-4">
