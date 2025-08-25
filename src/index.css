@@ -41,23 +41,23 @@ All colors MUST be HSL.
     --priority-moderate: 25 95% 53%;
     --priority-low: 142 71% 45%;
 
-    /* Grade level colors - Progressive blue/purple spectrum */
-    --grade-6: 210 100% 56%;
-    --grade-7: 235 100% 56%;
-    --grade-8: 260 100% 56%;
-    --grade-6-7-8: 235 85% 50%;
-    --grade-6-8: 235 90% 52%;
-    --grade-7-8: 250 90% 52%;
-    --grade-8-6-7: 235 80% 48%;
-    --grade-mixed: 215 70% 50%;
+    /* Grade level colors - Unique vibrant spectrum */
+    --grade-6: 330 85% 55%;
+    --grade-7: 275 85% 60%;
+    --grade-8: 200 90% 50%;
+    --grade-6-7-8: 300 75% 55%;
+    --grade-6-8: 315 80% 50%;
+    --grade-7-8: 240 85% 55%;
+    --grade-8-6-7: 285 80% 52%;
+    --grade-mixed: 350 70% 55%;
 
-    /* Subject colors - Distinct professional colors */
-    --subject-ela: 142 71% 45%;
-    --subject-math: 215 100% 56%;
-    --subject-science: 285 100% 56%;
-    --subject-social-studies: 25 95% 53%;
-    --subject-algebra: 190 100% 42%;
-    --subject-default: 215 16% 47%;
+    /* Subject colors - Completely distinct color palette */
+    --subject-ela: 16 100% 66%;
+    --subject-math: 45 100% 51%;
+    --subject-science: 120 60% 50%;
+    --subject-social-studies: 300 100% 70%;
+    --subject-algebra: 180 70% 45%;
+    --subject-default: 0 0% 50%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;

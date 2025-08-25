@@ -30,7 +30,7 @@ const LearningObjectivesInterface = () => {
   const [gradeFilter, setGradeFilter] = useState("all");
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
-  const [sortBy, setSortBy] = useState<"grade" | "subject" | "priority">("grade");
+  const [sortBy, setSortBy] = useState<"subject" | "priority">("subject");
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
   useEffect(() => {
@@ -81,8 +81,6 @@ const LearningObjectivesInterface = () => {
 
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case "grade":
-          return (a["Grade Level"] || "").localeCompare(b["Grade Level"] || "");
         case "subject":
           return (a["Subject"] || "").localeCompare(b["Subject"] || "");
         case "priority":
@@ -203,9 +201,13 @@ const LearningObjectivesInterface = () => {
                 </SelectContent>
               </Select>
 
-              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Priorities" />
+              <Select 
+                value={priorityFilter} 
+                onValueChange={setPriorityFilter}
+                disabled={gradeFilter === "all" || subjectFilter === "all"}
+              >
+                <SelectTrigger className={gradeFilter === "all" || subjectFilter === "all" ? "opacity-50" : ""}>
+                  <SelectValue placeholder={gradeFilter === "all" || subjectFilter === "all" ? "Select grade & subject first" : "All Priorities"} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Priorities</SelectItem>
@@ -215,12 +217,11 @@ const LearningObjectivesInterface = () => {
                 </SelectContent>
               </Select>
 
-              <Select value={sortBy} onValueChange={(value: "grade" | "subject" | "priority") => setSortBy(value)}>
+              <Select value={sortBy} onValueChange={(value: "subject" | "priority") => setSortBy(value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="grade">Sort by Grade</SelectItem>
                   <SelectItem value="subject">Sort by Subject</SelectItem>
                   <SelectItem value="priority">Sort by Priority</SelectItem>
                 </SelectContent>
