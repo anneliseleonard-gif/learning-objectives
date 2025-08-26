@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ChevronDown, ChevronRight, Search, Filter } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -27,7 +29,7 @@ const LearningObjectivesInterface = () => {
   const [objectives, setObjectives] = useState<LearningObjective[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [gradeFilter, setGradeFilter] = useState("all");
+  const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [sortBy, setSortBy] = useState<"subject" | "priority">("subject");
@@ -50,10 +52,8 @@ const LearningObjectivesInterface = () => {
     fetchObjectives();
   }, []);
 
-  const uniqueGrades = useMemo(() => 
-    [...new Set(objectives.map(obj => obj["Grade Level"]).filter(Boolean))].sort(),
-    [objectives]
-  );
+  // Fixed grade options - only 6th, 7th, 8th
+  const availableGrades = ["6th", "7th", "8th"];
 
   const uniqueSubjects = useMemo(() => 
     [...new Set(objectives.map(obj => obj["Subject"]).filter(Boolean))].sort(),
@@ -72,7 +72,13 @@ const LearningObjectivesInterface = () => {
         obj["Standard"]?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         obj["Plain Language"]?.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesGrade = gradeFilter === "all" || gradeFilter === "" || obj["Grade Level"] === gradeFilter;
+      // Map Algebra I to 8th grade for filtering
+      let objectiveGrade = obj["Grade Level"];
+      if (obj["Subject"] === "Algebra I") {
+        objectiveGrade = "8th";
+      }
+      
+      const matchesGrade = selectedGrades.length === 0 || selectedGrades.includes(objectiveGrade);
       const matchesSubject = subjectFilter === "all" || subjectFilter === "" || obj["Subject"] === subjectFilter;
       const matchesPriority = priorityFilter === "all" || priorityFilter === "" || obj["Priority Level"] === priorityFilter;
 
@@ -91,7 +97,15 @@ const LearningObjectivesInterface = () => {
     });
 
     return filtered;
-  }, [objectives, searchTerm, gradeFilter, subjectFilter, priorityFilter, sortBy]);
+  }, [objectives, searchTerm, selectedGrades, subjectFilter, priorityFilter, sortBy]);
+
+  const handleGradeToggle = (grade: string) => {
+    setSelectedGrades(prev => 
+      prev.includes(grade) 
+        ? prev.filter(g => g !== grade)
+        : [...prev, grade]
+    );
+  };
 
   const toggleExpanded = (id: number) => {
     const newExpanded = new Set(expandedRows);
@@ -171,17 +185,35 @@ const LearningObjectivesInterface = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3">
-              <Select value={gradeFilter} onValueChange={setGradeFilter}>
-                <SelectTrigger className="w-full sm:w-32">
-                  <SelectValue placeholder="Grade" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Grades</SelectItem>
-                  {uniqueGrades.map(grade => (
-                    <SelectItem key={grade} value={grade}>{grade}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full sm:w-32 justify-between">
+                    {selectedGrades.length === 0 ? "All Grades" : 
+                     selectedGrades.length === 1 ? selectedGrades[0] :
+                     `${selectedGrades.length} grades`}
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-2">
+                  <div className="space-y-2">
+                    {availableGrades.map(grade => (
+                      <div key={grade} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={grade}
+                          checked={selectedGrades.includes(grade)}
+                          onCheckedChange={() => handleGradeToggle(grade)}
+                        />
+                        <label 
+                          htmlFor={grade} 
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          {grade}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
 
               <Select value={subjectFilter} onValueChange={setSubjectFilter}>
                 <SelectTrigger className="w-full sm:w-36">
@@ -198,9 +230,9 @@ const LearningObjectivesInterface = () => {
               <Select 
                 value={priorityFilter} 
                 onValueChange={setPriorityFilter}
-                disabled={gradeFilter === "all" || subjectFilter === "all"}
+                disabled={selectedGrades.length === 0 || subjectFilter === "all"}
               >
-                <SelectTrigger className={`w-full sm:w-32 ${gradeFilter === "all" || subjectFilter === "all" ? "opacity-50" : ""}`}>
+                <SelectTrigger className={`w-full sm:w-32 ${selectedGrades.length === 0 || subjectFilter === "all" ? "opacity-50" : ""}`}>
                   <SelectValue placeholder="Priority" />
                 </SelectTrigger>
                 <SelectContent>
@@ -250,8 +282,8 @@ const LearningObjectivesInterface = () => {
                             ) : (
                               <ChevronRight className="h-4 w-4 text-muted-foreground" />
                             )}
-                            <Badge className={`text-xs ${getGradeBadgeColor(objective["Grade Level"])}`}>
-                              {objective["Grade Level"]}
+                            <Badge className={`text-xs ${getGradeBadgeColor(objective["Subject"] === "Algebra I" ? "8th" : objective["Grade Level"])}`}>
+                              {objective["Subject"] === "Algebra I" ? "8th" : objective["Grade Level"]}
                             </Badge>
                             <Badge className={`text-xs ${getSubjectBadgeColor(objective["Subject"])}`}>
                               {objective["Subject"]}
