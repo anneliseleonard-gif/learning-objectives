@@ -217,7 +217,7 @@ const LearningObjectivesInterface = () => {
 
               <Select value={subjectFilter} onValueChange={setSubjectFilter}>
                 <SelectTrigger className="w-full sm:w-36">
-                  <SelectValue placeholder="Subject" />
+                  <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Subjects</SelectItem>
