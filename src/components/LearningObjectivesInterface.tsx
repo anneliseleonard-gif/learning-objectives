@@ -215,9 +215,37 @@ const LearningObjectivesInterface = () => {
                 </PopoverContent>
               </Popover>
 
-              <Select value={sortBy} onValueChange={(value: "subject" | "priority") => setSortBy(value)}>
-                <SelectTrigger className="w-full sm:w-32">
+              <Select value={subjectFilter} onValueChange={setSubjectFilter}>
+                <SelectTrigger className="w-full sm:w-36">
                   <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Subjects</SelectItem>
+                  {uniqueSubjects.map(subject => (
+                    <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select 
+                value={priorityFilter} 
+                onValueChange={setPriorityFilter}
+                disabled={selectedGrades.length === 0 || subjectFilter === "all"}
+              >
+                <SelectTrigger className={`w-full sm:w-32 ${selectedGrades.length === 0 || subjectFilter === "all" ? "opacity-50" : ""}`}>
+                  <SelectValue placeholder="Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {uniquePriorities.map(priority => (
+                    <SelectItem key={priority} value={priority}>{priority}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={sortBy} onValueChange={(value: "subject" | "priority") => setSortBy(value)}>
+                <SelectTrigger className="w-full sm:w-28">
+                  <SelectValue placeholder="Sort" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="subject">Subject</SelectItem>
